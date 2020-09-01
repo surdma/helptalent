@@ -25,6 +25,6 @@ from .views import acme_challenge
 urlpatterns = [
     path('', index, name='index'),
     path('admin/', admin.site.urls),
-    path('.well-known/acme_challenge/sXHtayLunf1FS18aYyaPygDk6R-K3UAaIFp0Qn9u1ig', acme_challenge, name='acme_challenge'),
+    path('.well-known/acme-challenge/-mUIvSiRb6mlZG7n_7Ef7MLsClSyVZhRXtajJBo0SH0', acme_challenge, name='acme-challenge'),
     # path('api/', include(router.urls)),
 ]
