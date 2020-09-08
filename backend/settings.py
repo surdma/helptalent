@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-import os
+import os, datetime
 import django_heroku
 from decouple import config, Csv
 from pathlib import Path
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'todo',
+    'djoser',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +89,22 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
+
+AUTH_USER_MODEL = 'authentication.UserAuth'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES':[
+        'rest_framework.permissions.IsAuthenticated',
+        ],
+    
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
 }
 
 
@@ -151,3 +169,33 @@ EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+
+#Aauthentication security setup
+
+DJOSER = {
+    'LOGIN_FIELD':'email',
+    'PASSWORD_RESET_CONFIRM_URL':'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL':'email/reset/comfirm/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL':True,
+    'SEND_CONFIRMATION_EMAIL':True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION':True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION':True,
+    'ACTIVATION_URL':'activate/{uid}/{token}',
+    'USER_CREATE_PASSWORD_RETYPE':True,
+    'SET_PASSWORD_RETYPE':True,
+    'LOGOUT_ON_PASSWORD_CHANGE':True,
+    'SERIALIZERS' : {
+        'user_create':'authentication.serializers.AuthSerializer',
+        'user':'authentication.serializers.AuthSerializer',
+        'user_delete':'djoser.serializers.UserDeleteSerializer',
+        'activation': 'djoser.serializers.ActivationSerializer',
+        'password_reset': 'djoser.serializers.SendEmailResetSerializer',
+        'password_reset_confirm':'djoser.serializers.PasswordResetConfirmSerializer',
+        'password_reset_confirm_retype':
+            'djoser.serializers.PasswordResetConfirmRetypeSerializer',
+        'token': 'djoser.serializers.TokenSerializer',
+        'token_create': 'djoser.serializers.TokenCreateSerializer',
+    }
+}
+

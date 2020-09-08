@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import routers
-from .views import index
+#from .views import index
 from .views import acme_challenge
 from todo.views import  TodoView
 
@@ -27,5 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('.well-known/acme-challenge/-mUIvSiRb6mlZG7n_7Ef7MLsClSyVZhRXtajJBo0SH0', acme_challenge, name='acme-challenge'),
-    re_path(r'^', index, name='index'),
+    #re_path(r'^', index, name='index'),
+    re_path(r'^auth/', include('authentication.urls')),
 ]
